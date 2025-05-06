@@ -21,8 +21,17 @@ func (c Client) Address(ctx context.Context, addr *Address) (*AddressInfo, error
 }
 
 type AdditionalInfo struct {
-	DeliveryPoint        string `json:"deliveryPoint"`
-	CarrierRoute         string `json:"carrierRoute"`
+	DeliveryPoint string `json:"deliveryPoint"`
+	CarrierRoute  string `json:"carrierRoute"`
+	// Y - Address was DPV confirmed for both primary and (if present) secondary numbers.
+	//
+	// D - Address was DPV confirmed for the primary number only, and Secondary number information was missing.
+	//
+	// S - Address was DPV confirmed for the primary number only, and Secondary number information was present but unconfirmed.
+	//
+	// N - Both Primary and (if present) Secondary number information failed to DPV Confirm.
+	//
+	// Blank - Address not presented to hash table.
 	DPVConfirmation      string `json:"DPVConfirmation"`
 	DPVCMRA              string `json:"DPVCMRA"`
 	Business             string `json:"business"`
