@@ -3,7 +3,16 @@ package uspsgo
 import (
 	"net/url"
 	"reflect"
+
+	"github.com/joho/godotenv"
 )
+
+func readEnv() {
+	err := godotenv.Load()
+	if err != nil {
+		panic(err)
+	}
+}
 
 func toParams(data any) url.Values {
 	v := reflect.ValueOf(data)

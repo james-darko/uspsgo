@@ -2,6 +2,7 @@ package uspsgo
 
 import (
 	"context"
+	"fmt"
 	"strings"
 )
 
@@ -39,6 +40,32 @@ type Address struct {
 	State                     string `json:"state"`
 	ZIPCode                   string `json:"ZIPCode"`
 	ZIPPlus4                  string `json:"ZIPPlus4"`
+}
+
+func (a Address) Zip() string {
+	if a.ZIPPlus4 != "" {
+		return a.ZIPCode + "-" + a.ZIPPlus4
+	}
+	return a.ZIPCode
+}
+
+func (a Address) StoreZip(zip string) error {
+	if zip == "" {
+		a.ZIPCode = ""
+		a.ZIPPlus4 = ""
+	} else if len(zip) == 5 {
+		a.ZIPCode = zip
+		a.ZIPPlus4 = ""
+	} else if len(zip) == 10 {
+		if zip[5] != '-' {
+			return fmt.Errorf("invalid zip code format: %s", zip)
+		}
+		a.ZIPCode = zip[:5]
+		a.ZIPPlus4 = zip[6:]
+	} else {
+		return fmt.Errorf("invalid zip code length: %d", len(zip))
+	}
+	return nil
 }
 
 func (a *Address) String() string {

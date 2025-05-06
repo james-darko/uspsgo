@@ -1,7 +1,7 @@
 package uspsgo
 
 import (
-	"fmt"
+	"testing"
 
 	"github.com/james-darko/uspsgo/rt"
 )
@@ -22,25 +22,26 @@ var testAddress2 = &Address{
 	ZIPCode:       "29492",
 }
 
-func main() {
+func TestZIPCode(t *testing.T) {
+	readEnv()
 	ctx := Context()
 	c := New(rt.MustGetEnv("USPS_KEY"), rt.MustGetEnv("USPS_SECRET"))
+
 	info, err := c.Address(ctx, testAddress2)
 	if err != nil {
-		fmt.Println(err)
-		return
+		t.Fatalf("Address lookup failed: %v", err)
 	}
-	fmt.Printf("%+v\n", info)
-	ciyState, err := c.CityState(ctx, testAddress2.ZIPCode)
+	t.Logf("Address Info: %+v\n", info)
+
+	cityState, err := c.CityState(ctx, testAddress2.ZIPCode)
 	if err != nil {
-		fmt.Println(err)
-		return
+		t.Fatalf("CityState lookup failed: %v", err)
 	}
-	fmt.Printf("%+v\n", ciyState)
+	t.Logf("CityState Info: %+v\n", cityState)
+
 	addr, err := c.ZIPCode(ctx, testAddress2)
 	if err != nil {
-		fmt.Println(err)
-		return
+		t.Fatalf("ZIPCode lookup failed: %v", err)
 	}
-	fmt.Println(addr.String())
+	t.Logf("ZIPCode Info: %s\n", addr.String())
 }
