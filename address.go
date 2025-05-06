@@ -42,14 +42,14 @@ type Address struct {
 	ZIPPlus4                  string `json:"ZIPPlus4"`
 }
 
-func (a Address) Zip() string {
+func (a *Address) Zip() string {
 	if a.ZIPPlus4 != "" {
 		return a.ZIPCode + "-" + a.ZIPPlus4
 	}
 	return a.ZIPCode
 }
 
-func (a Address) StoreZip(zip string) error {
+func (a *Address) StoreZip(zip string) error {
 	if zip == "" {
 		a.ZIPCode = ""
 		a.ZIPPlus4 = ""
