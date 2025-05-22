@@ -40,15 +40,15 @@ type AdditionalInfo struct {
 }
 
 type Address struct {
-	Firm                      string `json:"firm"`
-	StreetAddress             string `json:"streetAddress"`
-	StreetAddressAbbreviation string `json:"streetAddressAbbreviation"`
-	SecondaryAddress          string `json:"secondaryAddress"`
-	CityAbbreviation          string `json:"cityAbbreviation"`
-	City                      string `json:"city"`
-	State                     string `json:"state"`
-	ZIPCode                   string `json:"ZIPCode"`
-	ZIPPlus4                  string `json:"ZIPPlus4"`
+	Firm                      string `json:"firm,omitempty"`
+	StreetAddress             string `json:"streetAddress,omitempty"`
+	StreetAddressAbbreviation string `json:"streetAddressAbbreviation,omitempty"`
+	SecondaryAddress          string `json:"secondaryAddress,omitempty"`
+	CityAbbreviation          string `json:"cityAbbreviation,omitempty"`
+	City                      string `json:"city,omitempty"`
+	State                     string `json:"state,omitempty"`
+	ZIPCode                   string `json:"ZIPCode,omitempty"`
+	ZIPPlus4                  string `json:"ZIPPlus4,omitempty"`
 }
 
 func (a *Address) Zip() string {
@@ -99,6 +99,28 @@ func (a *Address) String() string {
 		buf.WriteString(a.ZIPPlus4)
 	}
 	return buf.String()
+}
+
+func (a *Address) PlausiblyValid() bool {
+	if a.StreetAddress == "" {
+		return false
+	}
+	if a.City == "" {
+		return false
+	}
+	if a.State == "" {
+		return false
+	}
+	if a.ZIPCode == "" {
+		return false
+	}
+	if len(a.ZIPCode) != 5 && len(a.ZIPCode) != 10 {
+		return false
+	}
+	if len(a.ZIPPlus4) != 0 && len(a.ZIPPlus4) != 4 {
+		return false
+	}
+	return true
 }
 
 func (a *Address) StringAbbrivated() string {
